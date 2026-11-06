@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.pylibs/
+.cache/
+.venv/
+*.egg-info/
+
+# macOS
+.DS_Store
+
+# Data (too large for git; see README for download/preprocessing)
+data/IXI-T1/
+data/IXI-T1.tar
+data/parts/
+data/processed/*.npy
+
+# Model weights (reproducible; see README)
+checkpoints/*.pt
+
+# Large per-slice predictions
+results/preds/
+
+# LaTeX intermediates
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz
+
+# Office temp
+~$*.docx
+~$*.pptx

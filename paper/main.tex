@@ -1,0 +1,255 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{xcolor}
+
+\graphicspath{{../results/figures/}{figures/}}
+
+\input{numbers.tex}
+
+\begin{document}
+
+\title{Measuring Hallucination in MRI Super-Resolution:\\ A Controlled Probe and an Empirical Study of Fidelity, Sharpness and Fabrication}
+
+\author{Cheng Shuting, Xiong Jiuli, Wang Shenhao, and Du Jinguo\\
+School of Biomedical Engineering, ShanghaiTech University, Shanghai, China}
+
+\maketitle
+
+\begin{abstract}
+Single-image super-resolution (SR) can make low-resolution magnetic resonance imaging (MRI) appear sharper, but it can also fabricate anatomically plausible structure that was never measured. Such hallucinations are more dangerous than blur because they survive visual inspection and are rewarded by perceptual metrics. We argue that progress is limited by the absence of a controlled way to \emph{measure} hallucination. We introduce a counterfactual occlusion probe (COP): textured patches of a high-resolution reference are replaced by their local mean, the modified image is degraded, and any high-frequency energy the model places back into the now-flat patch is, by construction, unsupported by the input. Using COP together with standard fidelity metrics, we study four training objectives on \numTrainSubjects{} IXI T1w subjects and \numTestSubjects{} held-out subjects with a subject-level split. Three findings emerge. First, a perceptual loss improves LPIPS but increases COP hallucination energy by \HEpercPct{}\% relative to a pixel-loss baseline. Second, multi-kernel degradation augmentation improves out-of-distribution robustness by \OODgain{}~dB but also increases hallucination, and adding a degradation self-consistency loss to MKDA increases it further. Third, a simple shrinkage of the SR output toward bicubic interpolation lowers hallucination by \HEshrinkPct{}\% for a PSNR cost of \PSNRshrink{}~dB, and a learned error-prediction gate does not improve on this uniform shrinkage. We conclude that pixel-loss SR is conservative, that perceptual sharpening and aggressive augmentation buy robustness or texture at the price of fabrication, and that a calibrated shrinkage provides an interpretable risk-control knob. Code, splits, configurations and logs are released for reproduction.
+\end{abstract}
+
+\begin{IEEEkeywords}
+MRI, super-resolution, hallucination, image fidelity, evaluation, uncertainty.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{M}{agnetic} resonance imaging (MRI) is routinely acquired with anisotropic voxels, thick slices or accelerated protocols, and super-resolution (SR) is an attractive way to recover fine anatomy without additional scan time. Deep networks can map a low-resolution (LR) slice to a high-resolution (HR) estimate with impressive perceptual quality \cite{dong2016srcnn,ledig2017srresnet,lim2017edsr,liang2021swinir}. However, single-image SR is fundamentally ill-posed: many HR images are consistent with the same LR observation. A model trained with a pixel-wise loss tends to produce blurred but conservative estimates, whereas perceptual and adversarial objectives deliberately favour sharp, texture-like outputs \cite{johnson2016perceptual,wang2018esrgan}. The latter can invent cortical folds, vessels or lesion boundaries that are not present in the input.
+
+This failure mode is usually called \emph{hallucination}. It has been documented for medical image translation \cite{cohen2018hallucinate} and is particularly consequential for MRI SR, where a fabricated sulcus or a smoothed-out lesion can change a radiological impression. Yet the field still evaluates SR mainly with PSNR, SSIM \cite{wang2004ssim} and LPIPS \cite{zhang2018lpips}. PSNR and SSIM reward smoothness and are insensitive to small fabricated structures; LPIPS rewards realistic texture and can therefore \emph{reward} hallucination. None of these metrics localises fabricated content, and none provides a controlled test in which the ground truth is known to contain no structure.
+
+We therefore separate the problem into three questions. (i) \emph{How can hallucination be measured with a known reference?} (ii) \emph{Which training objectives increase or decrease it?} (iii) \emph{Can it be controlled at inference without destroying genuine detail?} For (i) we introduce a counterfactual occlusion probe (COP). A textured patch of the HR reference is replaced by its local mean, producing an image in which the patch provably contains no structure. The patch is then degraded exactly like a real LR input and reconstructed. Any gradient energy inside the patch after reconstruction is fabricated by the model; we report it as a fraction of the original patch texture. Because the probe alters the reference rather than the model, it is applicable to any SR method and yields a physically interpretable number bounded between zero and one.
+
+For (ii) and (iii) we train four models with an identical RRDB backbone and an identical optimisation budget, so that differences are attributable to the objective: pixel loss, perceptual loss, multi-kernel degradation augmentation (MKDA), degradation self-consistency (DSC), and DSC+MKDA. We evaluate them on 18 held-out IXI subjects with a strict subject-level split, under the training degradation and under three mismatched degradations. We also study a training-free control: shrinking the SR output toward bicubic interpolation, $\hat{x}_\alpha=\alpha\hat{x}+(1-\alpha)\mathcal{B}(y)$, and compare it with a learned error-prediction gate.
+
+Our contributions are:
+\begin{itemize}
+\item a controlled, model-agnostic probe (COP) that quantifies fabricated structure against a known structure-free reference;
+\item a systematic, same-backbone comparison showing that a perceptual loss and MKDA increase COP hallucination while improving LPIPS or out-of-distribution PSNR, and that adding DSC to MKDA does not reduce it;
+\item evidence that a learned error-prediction gate is dominated by a constant shrinkage toward bicubic, which provides a simple and interpretable fidelity--hallucination operating point;
+\item a fully reproducible pipeline with subject-level splits, fixed configurations, training logs and evaluation scripts.
+\end{itemize}
+
+\section{Related Work}
+\subsection{MRI Super-Resolution}
+CNN-based SR progressed from SRCNN \cite{dong2016srcnn} to deep residual networks \cite{lim2017edsr} and GAN-based perceptual models \cite{ledig2017srresnet,wang2018esrgan}. Transformer and diffusion models have recently improved long-range modelling and perceptual quality \cite{liang2021swinir,saharia2022sr3}. In MRI, SR has been applied to thick-slice and anisotropic acquisitions, often with 3D densely connected or GAN-based networks \cite{chen2018mriSR,greenspan2009sr}. These methods optimise pixel or perceptual fidelity on pairs generated by a fixed downsampling operator, and are typically evaluated with PSNR/SSIM/LPIPS. Our work does not aim to beat the state of the art in PSNR; it asks whether the sharpness gained by such objectives is supported by the measurement.
+
+\subsection{Hallucination and Evaluation}
+Cohen \emph{et al.} showed that distribution-matching losses can hallucinate features in medical image translation \cite{cohen2018hallucinate}. In SR, hallucination is usually discussed qualitatively or measured by human raters, which is expensive and difficult to reproduce. Reference-based metrics cannot separate a plausible invention from a correct reconstruction when both have similar intensity statistics. Our COP sidesteps this by editing the reference: the correct answer inside the probe region is known to be flat, so any texture is an error regardless of how realistic it looks. This is related in spirit to counterfactual and perturbation-based evaluations, but operates on the image rather than on the network.
+
+\subsection{Uncertainty and Test-Time Control}
+Deep ensembles and test-time augmentation provide predictive uncertainty \cite{lakshminarayanan2017ensembles,wang2019tta}. In SR, uncertainty is rarely used at inference. We test a cheap post-hoc error head and compare its gate with a constant shrinkage; the comparison is informative because it isolates the value of spatial adaptivity from the value of simply moving toward a safer estimator.
+
+\section{Method}
+\subsection{Problem Setting}
+Let $x\in[0,1]^{H\times W}$ be an HR slice and $y\in[0,1]^{H/s\times W/s}$ its LR observation, with $s=4$. We model the acquisition operator as
+\begin{equation}
+y = \downarrow_s\!\left(k_\sigma * x\right) + n,
+\label{eq:degradation}
+\end{equation}
+where $k_\sigma$ is a Gaussian point-spread function with standard deviation $\sigma$, $\downarrow_s$ is $s\times s$ average pooling, and $n$ is optional Gaussian noise. This blur-and-pool operator is differentiable and captures the two dominant effects of a thick-slice or low-resolution acquisition: finite spatial resolution and voxel averaging. A generator $G_\theta$ maps $y$ to $\hat{x}=G_\theta(y)$.
+
+\subsection{Backbone}
+All learned models share a compact RRDB backbone \cite{wang2018esrgan} with four RRDB blocks, 64 feature channels and growth rate 32 (\numParams{} parameters). Two pixel-shuffle stages perform $\times4$ upsampling. The network predicts a residual on top of bicubic upsampling,
+\begin{equation}
+\hat{x} = \mathcal{B}(y) + f_\theta(y),
+\end{equation}
+where $\mathcal{B}$ is bicubic interpolation and the last convolution of $f_\theta$ is zero-initialised. This makes training start exactly at the bicubic solution and lets the network spend capacity on detail rather than on re-learning interpolation. The same backbone is used for every objective, so the comparison isolates the loss.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig_method.pdf}
+\caption{Overview. The shared RRDB generator is trained with one of four objectives (L1, perceptual, MKDA, DSC+MKDA). At inference we study a training-free shrinkage toward bicubic, and compare it with a learned error-prediction gate. COP edits the reference to create a region whose correct content is known to be flat.}
+\label{fig:method}
+\end{figure*}
+
+\subsection{Training Objectives}
+\paragraph{Pixel loss} $\mathcal{L}_{1}=\|G_\theta(y)-x\|_1$ is the conservative baseline.
+
+\paragraph{Perceptual loss} $\mathcal{L}=\mathcal{L}_1+\lambda_p\| \phi(G_\theta(y))-\phi(x)\|_1$, with $\phi$ the first twelve layers of AlexNet and $\lambda_p=0.02$. This is the sharpness-oriented comparison.
+
+\paragraph{Multi-kernel degradation augmentation (MKDA)} Each mini-batch samples $\sigma\sim\mathcal{U}\{0.5,0.8,1.1,1.4\}$ and applies \eqref{eq:degradation} on the fly. The network therefore cannot overfit a single downsampling operator.
+
+\paragraph{Degradation self-consistency (DSC)} We re-degrade the prediction and require it to reproduce the input:
+\begin{equation}
+\mathcal{L}_{\mathrm{DSC}} = \left\| \downarrow_s\!\left(k_\sigma * G_\theta(y)\right) - y \right\|_1 ,
+\label{eq:dsc}
+\end{equation}
+and optimise $\mathcal{L}_1+0.5\,\mathcal{L}_{\mathrm{DSC}}$. DSC is intended to penalise high-frequency content that does not survive the acquisition operator.
+
+\subsection{Training-Free Risk Control}
+A constant shrinkage toward bicubic,
+\begin{equation}
+\hat{x}_\alpha = \alpha\,\hat{x} + (1-\alpha)\,\mathcal{B}(y),\qquad \alpha\in[0,1],
+\label{eq:shrink}
+\end{equation}
+interpolates between the SR estimate ($\alpha=1$) and a non-hallucinating interpolant ($\alpha=0$). We sweep $\alpha$ on the validation split and report the full fidelity--hallucination curve. We also train a post-hoc error head $H_\phi$ on the frozen generator, with target $t=e/(e+\tau)$, $e=|\hat{x}-x|$, $\tau=0.02$, and gate the output as
+\begin{equation}
+w=e^{-\beta u},\qquad \hat{x}_{\mathrm{g}}=w\,\hat{x}+(1-w)\,\mathcal{B}(y),
+\label{eq:gate}
+\end{equation}
+where $u=H_\phi(f)\in[0,1]$. The gate is selected on validation and compared with the best constant shrinkage at matched hallucination.
+
+\subsection{Counterfactual Occlusion Probe}
+COP requires no model modification. For a test slice $x$, we select $K$ textured $48\times48$ patches that lie inside the brain and whose mean gradient magnitude is above the 60th percentile of candidate patches. Each patch $P$ is replaced by its mean intensity,
+\begin{equation}
+x^{\mathrm{occ}}(p) = \begin{cases}\mu_P, & p\in P,\\ x(p), & \text{otherwise},\end{cases}
+\end{equation}
+and $y^{\mathrm{occ}}$ is obtained with \eqref{eq:degradation}. The model reconstructs $\hat{x}^{\mathrm{occ}}=G_\theta(y^{\mathrm{occ}})$. Inside the inner $32\times32$ region $\Omega\subset P$ (which excludes the patch seam), we define
+\begin{equation}
+\mathrm{HE} = \frac{\mathbb{E}_{p\in\Omega}|\nabla \hat{x}^{\mathrm{occ}}(p)|}{\mathbb{E}_{p\in\Omega}|\nabla x(p)|},
+\qquad
+\mathrm{VR} = \frac{\mathrm{std}_{\Omega}(\hat{x}^{\mathrm{occ}})}{\mathrm{std}_{\Omega}(x)}.
+\label{eq:cop}
+\end{equation}
+HE and VR are zero for an ideal model that reproduces the flat reference, and approach one if the model regenerates the original texture. We also report the mean absolute error to the flat reference (MAE). The probe is complemented by standard fidelity metrics on unmodified slices; none of them localises fabrication, which is why COP is reported alongside them.
+
+\section{Experiments}
+\subsection{Data}
+We use the public IXI T1w dataset \cite{ixi2007}, which contains 581 healthy adult volumes from three sites (Guys, HH, IOP). We randomly sample 72 subjects stratified by site. Each volume is brain-extracted with deepbet \cite{deepbet2024}, normalised with the 1st/99th percentile of brain voxels, and axially sliced. Slices with less than 10\% of the maximal brain area are discarded; the remaining slices are resampled to 1~mm isotropic and centre-padded to $256\times256$. The split is by subject: \numTrainSubjects{} training, \numValSubjects{} validation and \numTestSubjects{} test subjects (\numTrainSlices{}, \numValSlices{} and \numTestSlices{} slices), with no subject appearing in more than one split. All hyper-parameters, the shrinkage weight and the gate strength are selected on validation; the test split is used once.
+
+\subsection{Training}
+Models are trained for \numSteps{} iterations with Adam \cite{kingma2015adam} (learning rate $2\times10^{-4}$, cosine decay to $10^{-6}$, 200-step warm-up), batch size 8, and $192\times192$ HR patches ($48\times48$ LR). Augmentation consists of random crops, flips and $90^\circ$ rotations. Validation PSNR is computed every 500 iterations on 24 fixed validation slices, and the best checkpoint is kept. All models use the same backbone and budget. Training and evaluation run on a single Apple M3 Pro GPU (MPS) with PyTorch \numTorchVersion{}.
+
+\subsection{Compared Methods}
+\textbf{Bicubic} is the non-learned control. \textbf{RRDB} is the shared backbone with an $\ell_1$ loss. \textbf{RRDB+MKDA} adds multi-kernel augmentation. \textbf{RRDB+DSC+MKDA} adds both DSC and MKDA. \textbf{RRDB+Perc} adds the AlexNet perceptual loss. \textbf{RRDB+Shrink} applies \eqref{eq:shrink} to the pixel-loss model with the validation-selected $\alpha$. \textbf{RRDB+Gate} applies \eqref{eq:gate}.
+
+\subsection{Metrics}
+We report PSNR, SSIM, LPIPS, HFEN (high-frequency error norm), edge-SSIM, and the COP statistics HE, VR and MAE. All metrics are computed per slice and averaged; we report mean $\pm$ standard deviation across slices, and paired Wilcoxon tests between the pixel-loss model and each variant.
+
+\section{Results}
+\subsection{Fidelity}
+Table~\ref{tab:main} reports the in-distribution results at $\sigma=0.8$. Bicubic reaches \PSNRbic{}~dB. The pixel-loss RRDB improves PSNR to \PSNRrrdb{}~dB and LPIPS from \LPIPSbic{} to \LPIPSrrdb{}. MKDA and DSC+MKDA are slightly worse in PSNR but better than bicubic; their main benefit is out-of-distribution. The perceptual model attains the best LPIPS (\LPIPSperc{}) at a PSNR of \PSNRperc{}~dB. The differences among the learned models are small in PSNR, which is precisely why a fidelity-only leaderboard is uninformative about hallucination.
+
+\begin{table*}[t]
+\centering
+\caption{In-distribution results ($\times4$, $\sigma=0.8$). Mean over \numTestSlices{} test slices from \numTestSubjects{} held-out subjects. Arrows indicate the preferred direction.}
+\label{tab:main}
+\begin{tabular}{lccccc}
+\toprule
+Method & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & HFEN$\downarrow$ & Edge-SSIM$\uparrow$ \\
+\midrule
+Bicubic        & \PSNRbic{} & \SSIMbic{} & \LPIPSbic{} & \HFENbic{} & \EDGEbic{} \\
+RRDB           & \PSNRrrdb{} & \SSIMrrdb{} & \LPIPSrrdb{} & \HFENrrdb{} & \EDGErrdb{} \\
+RRDB+MKDA      & \PSNRrrdbmkda{} & \SSIMrrdbmkda{} & \LPIPSrrdbmkda{} & \HFENrrdbmkda{} & \EDGErrdbmkda{} \\
+RRDB+DSC+MKDA  & \PSNRtrust{} & \SSIMtrust{} & \LPIPStrust{} & \HFENtrust{} & \EDGEtrust{} \\
+RRDB+Perc      & \PSNRperc{} & \SSIMperc{} & \LPIPSperc{} & \HFENperc{} & \EDGEperc{} \\
+RRDB+Shrink    & \PSNRshr{} & \SSIMshr{} & \LPIPSshr{} & \HFENshr{} & \EDGEshr{} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Hallucination}
+Table~\ref{tab:cop} and Fig.~\ref{fig:pareto} show the central result. Bicubic has a COP hallucination energy of \HEbic{}, essentially zero. The pixel-loss RRDB raises it to \HErrdb{}. The perceptual model reaches \HEperc{}, a \HEpercPct{}\% increase relative to RRDB, despite its better LPIPS. MKDA and DSC+MKDA also increase HE (\HErrdbmkda{} and \HEtrust{}, respectively) while improving out-of-distribution PSNR. Adding DSC to MKDA raises HE further, so none of the three training interventions reduces hallucination in this setting.
+
+A simple shrinkage, by contrast, moves the operating point along the frontier: $\alpha=0.9$ lowers HE to \HEshr{} (\HEshrinkPct{}\% below RRDB) for a PSNR change of \PSNRshrink{}~dB. The HE differences between RRDB and RRDB+Perc ($p=\pPercRRDBhe$) and between RRDB and shrinkage ($p=\pShrinkRRDBhe$) are both significant in a paired Wilcoxon test over slices. The full $\alpha$ sweep can be used to choose a risk budget; we report $\alpha=0.9$ as a representative point with a PSNR cost below 0.05~dB.
+
+\begin{table}[t]
+\centering
+\caption{Counterfactual occlusion probe and out-of-distribution robustness. HE/VR are fractions; lower is better. OOD columns are PSNR under degradations not used in training.}
+\label{tab:cop}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
+\toprule
+Method & HE$\downarrow$ & VR$\downarrow$ & PSNR$_{\text{blur1.4}}$ & PSNR$_{\text{bicubic}}$ \\
+\midrule
+Bicubic       & \HEbic{} & \VRbic{} & \OODblurBic{} & \OODbicBic{} \\
+RRDB          & \HErrdb{} & \VRrrdb{} & \OODblurRrdb{} & \OODbicRrdb{} \\
+RRDB+MKDA     & \HErrdbmkda{} & \VRrrdbmkda{} & \OODblurRrdbmkda{} & \OODbicRrdbmkda{} \\
+RRDB+DSC+MKDA & \HEtrust{} & \VRtrust{} & \OODblurTrust{} & \OODbicTrust{} \\
+RRDB+Perc     & \HEperc{} & \VRperc{} & \OODblurPerc{} & \OODbicPerc{} \\
+RRDB+Shrink   & \HEshr{} & \VRshr{} & \OODblurShr{} & \OODbicShr{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_pareto.pdf}
+\caption{Fidelity--hallucination plane on the test set. Each point is one model; the horizontal axis is PSNR and the vertical axis is COP hallucination energy (lower is better). Bicubic is at the bottom left, the pixel-loss RRDB at the right, and the perceptual/DSC+MKDA variants move upward. Shrinkage moves the pixel-loss model down without a large horizontal shift.}
+\label{fig:pareto}
+\end{figure}
+
+\subsection{Out-of-Distribution Degradation}
+Table~\ref{tab:cop} (right) and Fig.~\ref{fig:ood} report performance when the test degradation differs from training. The single-kernel RRDB degrades under stronger blur; MKDA recovers \OODgain{}~dB, and DSC+MKDA retains a similar gain (\OODgainTrust{}~dB). This confirms that MKDA does what it was designed to do. The same intervention, however, increases COP HE, so robustness and fidelity are not the same objective.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_ood.pdf}
+\caption{PSNR under mismatched degradations. Models are trained only with $\sigma=0.8$ (RRDB, Perc) or with MKDA.}
+\label{fig:ood}
+\end{figure}
+
+\subsection{Gate Versus Uniform Shrinkage}
+On the validation split, the learned gate reduces HE only by blurring: at matched HE, the constant shrinkage has a higher PSNR (Fig.~\ref{fig:pareto}). For example, the gate at $\beta=1$ reaches HE \HEgateOne{} at \PSNRgateOne{}~dB, whereas the shrinkage at the same HE reaches \PSNRuniformOne{}~dB. The error head is trained to predict absolute error, which is largest at genuine edges, so the gate suppresses real structure rather than fabricated texture. This negative result motivates the simpler control.
+
+\begin{table}[t]
+\centering
+\caption{Validation comparison of the learned gate and a constant shrinkage at matched hallucination.}
+\label{tab:gate}
+\begin{tabular}{lccc}
+\toprule
+Control & HE$\downarrow$ & PSNR & SSIM \\
+\midrule
+Gate $\beta=1$      & \HEgateOne{} & \PSNRgateOne{} & \SSIMgateOne{} \\
+Shrinkage (matched HE) & \HEuniformOne{} & \PSNRuniformOne{} & \SSIMuniformOne{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Qualitative Results and Failure Cases}
+Fig.~\ref{fig:qual} shows representative slices. The pixel-loss model produces smooth but faithful cortex; the perceptual model adds high-frequency texture along sulci, and the pixel-wise differences to the reference are slightly larger. The differences are subtle at the display scale, which is precisely why COP quantifies them rather than relying on visual inspection. Fig.~\ref{fig:cop} visualises the probe: all models leave the flattened patch nearly flat, but the residual gradient energy differs, and the perceptual model leaves more of it. We show failure cases in Fig.~\ref{fig:failure}: small structures near the brain surface can be over-smoothed by shrinkage, and dark banding appears when the input contains motion-related blur that is not represented by our degradation model.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_qual.pdf}
+\caption{Qualitative comparison ($\times4$). Columns: LR bicubic, RRDB, RRDB+Perc, RRDB+Shrink, HR reference, and absolute error maps.}
+\label{fig:qual}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_cop.pdf}
+\caption{Counterfactual occlusion probe. A textured patch is replaced by its local mean, degraded, and reconstructed; the inner region is outlined. All models leave the patch nearly flat, but the residual gradient energy differs, and that difference is what HE quantifies.}
+\label{fig:cop}
+\end{figure*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_failure.pdf}
+\caption{Failure cases: over-smoothing by shrinkage and banding under motion-like blur not seen in training.}
+\label{fig:failure}
+\end{figure}
+
+\section{Discussion}
+Our results support four conclusions. First, hallucination is measurable: COP separates objectives that are almost indistinguishable in PSNR. Second, perceptual sharpening is not free: the LPIPS gain of the perceptual model comes with more fabricated texture. Third, robustness-oriented training (MKDA) and adding a degradation-consistency loss (DSC) do not reduce hallucination; in this setting they increase it, because both encourage the network to rely on a stronger prior when the input is ambiguous. Fourth, a constant shrinkage is a better risk-control knob than a learned error gate, because the error head is sensitive to genuine edges rather than to fabricated texture.
+
+The study has limitations. It uses 2D axial slices from healthy adults and a synthetic blur-and-pool degradation; real low-resolution MRI involves slice profiles, motion and coil effects that are not modelled here. COP uses a flat patch as a structure-free reference, which is a strong counterfactual but not a substitute for a radiologist's assessment. The gate's error head is trained on the same distribution as the generator, so its calibration may degrade under severe domain shift. Finally, we evaluate a single architecture family; transformer and diffusion models may exhibit different hallucination profiles.
+
+\section{Conclusion}
+We presented a controlled probe for hallucinated structure in MRI SR and a systematic study of four training objectives. The probe shows that a perceptual loss and multi-kernel augmentation can fabricate texture that pixel metrics do not see, and that a simple shrinkage toward bicubic provides an interpretable fidelity--hallucination operating point. We recommend reporting COP alongside PSNR and LPIPS in future MRI SR work, and treating perceptual gains as claims that require a hallucination audit.
+
+\section*{Reproducibility}
+Code, subject-level splits, configurations and training logs are available in the project repository. The split is fixed (seed 2026), the test set is evaluated once, and every number in this paper is generated from the result files by a script.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

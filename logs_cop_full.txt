@@ -1,0 +1,13 @@
+rrdb_dsc_mkda COP 80/400 he=0.031
+rrdb_dsc_mkda COP 120/400 he=0.024
+rrdb_dsc_mkda COP 200/400 he=0.039
+rrdb_dsc_mkda COP 240/400 he=0.031
+rrdb_dsc_mkda COP 280/400 he=0.036
+rrdb_dsc_mkda COP 320/400 he=0.026
+{
+ "he": 0.031348383883840515,
+ "vr": 0.015725858880950523,
+ "mae": 0.001869343435869839,
+ "n_patches": 263,
+ "n_slices": 258
+}

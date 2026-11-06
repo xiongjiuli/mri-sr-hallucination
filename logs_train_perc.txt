@@ -1,0 +1,110 @@
+[rrdb_perc] 0 loss=0.0249 l1=0.0221 perc=0.1423
+[rrdb_perc] 50 loss=0.0247 l1=0.0219 perc=0.1420
+[rrdb_perc] 100 loss=0.0200 l1=0.0176 perc=0.1196
+[rrdb_perc] 150 loss=0.0212 l1=0.0189 perc=0.1135
+[rrdb_perc] 200 loss=0.0155 l1=0.0137 perc=0.0897
+[rrdb_perc] 250 loss=0.0153 l1=0.0136 perc=0.0871
+[rrdb_perc] 300 loss=0.0207 l1=0.0185 perc=0.1148
+[rrdb_perc] 350 loss=0.0135 l1=0.0119 perc=0.0771
+[rrdb_perc] 400 loss=0.0180 l1=0.0163 perc=0.0838
+[rrdb_perc] 450 loss=0.0177 l1=0.0157 perc=0.0988
+[rrdb_perc] 500 loss=0.0146 l1=0.0132 perc=0.0733
+[rrdb_perc] step 500 val psnr=33.629 ssim=0.9667 (197s)
+[rrdb_perc] 550 loss=0.0136 l1=0.0120 perc=0.0806
+[rrdb_perc] 600 loss=0.0149 l1=0.0132 perc=0.0835
+[rrdb_perc] 650 loss=0.0167 l1=0.0152 perc=0.0749
+[rrdb_perc] 700 loss=0.0133 l1=0.0117 perc=0.0787
+[rrdb_perc] 750 loss=0.0168 l1=0.0152 perc=0.0828
+[rrdb_perc] 800 loss=0.0155 l1=0.0139 perc=0.0796
+[rrdb_perc] 850 loss=0.0139 l1=0.0122 perc=0.0855
+[rrdb_perc] 900 loss=0.0149 l1=0.0132 perc=0.0846
+[rrdb_perc] 950 loss=0.0139 l1=0.0122 perc=0.0863
+[rrdb_perc] 1000 loss=0.0155 l1=0.0139 perc=0.0800
+[rrdb_perc] step 1000 val psnr=33.954 ssim=0.9690 (370s)
+[rrdb_perc] 1050 loss=0.0159 l1=0.0142 perc=0.0828
+[rrdb_perc] 1100 loss=0.0139 l1=0.0123 perc=0.0769
+[rrdb_perc] 1150 loss=0.0139 l1=0.0124 perc=0.0749
+[rrdb_perc] 1200 loss=0.0177 l1=0.0158 perc=0.0910
+[rrdb_perc] 1250 loss=0.0162 l1=0.0145 perc=0.0809
+[rrdb_perc] 1300 loss=0.0138 l1=0.0122 perc=0.0810
+[rrdb_perc] 1350 loss=0.0150 l1=0.0134 perc=0.0820
+[rrdb_perc] 1400 loss=0.0136 l1=0.0122 perc=0.0694
+[rrdb_perc] 1450 loss=0.0180 l1=0.0161 perc=0.0954
+[rrdb_perc] 1500 loss=0.0161 l1=0.0143 perc=0.0874
+[rrdb_perc] step 1500 val psnr=34.201 ssim=0.9707 (507s)
+[rrdb_perc] 1550 loss=0.0106 l1=0.0093 perc=0.0655
+[rrdb_perc] 1600 loss=0.0185 l1=0.0166 perc=0.0966
+[rrdb_perc] 1650 loss=0.0130 l1=0.0117 perc=0.0643
+[rrdb_perc] 1700 loss=0.0146 l1=0.0129 perc=0.0835
+[rrdb_perc] 1750 loss=0.0163 l1=0.0147 perc=0.0784
+[rrdb_perc] 1800 loss=0.0139 l1=0.0123 perc=0.0821
+[rrdb_perc] 1850 loss=0.0126 l1=0.0112 perc=0.0715
+[rrdb_perc] 1900 loss=0.0136 l1=0.0123 perc=0.0697
+[rrdb_perc] 1950 loss=0.0119 l1=0.0106 perc=0.0661
+[rrdb_perc] 2000 loss=0.0130 l1=0.0116 perc=0.0702
+[rrdb_perc] step 2000 val psnr=34.290 ssim=0.9718 (680s)
+[rrdb_perc] 2050 loss=0.0144 l1=0.0129 perc=0.0752
+[rrdb_perc] 2100 loss=0.0155 l1=0.0140 perc=0.0764
+[rrdb_perc] 2150 loss=0.0119 l1=0.0105 perc=0.0743
+[rrdb_perc] 2200 loss=0.0139 l1=0.0124 perc=0.0781
+[rrdb_perc] 2250 loss=0.0178 l1=0.0160 perc=0.0898
+[rrdb_perc] 2300 loss=0.0167 l1=0.0150 perc=0.0836
+[rrdb_perc] 2350 loss=0.0135 l1=0.0120 perc=0.0740
+[rrdb_perc] 2400 loss=0.0131 l1=0.0116 perc=0.0727
+[rrdb_perc] 2450 loss=0.0148 l1=0.0132 perc=0.0781
+[rrdb_perc] 2500 loss=0.0140 l1=0.0125 perc=0.0756
+[rrdb_perc] step 2500 val psnr=34.399 ssim=0.9721 (798s)
+[rrdb_perc] 2550 loss=0.0140 l1=0.0124 perc=0.0835
+[rrdb_perc] 2600 loss=0.0137 l1=0.0123 perc=0.0717
+[rrdb_perc] 2650 loss=0.0115 l1=0.0103 perc=0.0594
+[rrdb_perc] 2700 loss=0.0134 l1=0.0120 perc=0.0687
+[rrdb_perc] 2750 loss=0.0155 l1=0.0140 perc=0.0771
+[rrdb_perc] 2800 loss=0.0102 l1=0.0089 perc=0.0621
+[rrdb_perc] 2850 loss=0.0151 l1=0.0134 perc=0.0867
+[rrdb_perc] 2900 loss=0.0107 l1=0.0092 perc=0.0721
+[rrdb_perc] 2950 loss=0.0134 l1=0.0119 perc=0.0760
+[rrdb_perc] 3000 loss=0.0138 l1=0.0123 perc=0.0750
+[rrdb_perc] step 3000 val psnr=34.406 ssim=0.9725 (912s)
+[rrdb_perc] 3050 loss=0.0148 l1=0.0133 perc=0.0731
+[rrdb_perc] 3100 loss=0.0107 l1=0.0094 perc=0.0648
+[rrdb_perc] 3150 loss=0.0108 l1=0.0094 perc=0.0690
+[rrdb_perc] 3200 loss=0.0144 l1=0.0129 perc=0.0753
+[rrdb_perc] 3250 loss=0.0110 l1=0.0097 perc=0.0612
+[rrdb_perc] 3300 loss=0.0154 l1=0.0138 perc=0.0801
+[rrdb_perc] 3350 loss=0.0144 l1=0.0128 perc=0.0799
+[rrdb_perc] 3400 loss=0.0139 l1=0.0122 perc=0.0842
+[rrdb_perc] 3450 loss=0.0146 l1=0.0130 perc=0.0838
+[rrdb_perc] 3500 loss=0.0157 l1=0.0140 perc=0.0875
+[rrdb_perc] step 3500 val psnr=34.493 ssim=0.9730 (1027s)
+[rrdb_perc] 3550 loss=0.0166 l1=0.0148 perc=0.0924
+[rrdb_perc] 3600 loss=0.0164 l1=0.0146 perc=0.0887
+[rrdb_perc] 3650 loss=0.0133 l1=0.0119 perc=0.0684
+[rrdb_perc] 3700 loss=0.0165 l1=0.0148 perc=0.0819
+[rrdb_perc] 3750 loss=0.0114 l1=0.0101 perc=0.0663
+[rrdb_perc] 3800 loss=0.0107 l1=0.0096 perc=0.0569
+[rrdb_perc] 3850 loss=0.0147 l1=0.0131 perc=0.0812
+[rrdb_perc] 3900 loss=0.0124 l1=0.0111 perc=0.0635
+[rrdb_perc] 3950 loss=0.0132 l1=0.0119 perc=0.0655
+[rrdb_perc] 4000 loss=0.0145 l1=0.0131 perc=0.0747
+[rrdb_perc] step 4000 val psnr=34.500 ssim=0.9732 (1141s)
+[rrdb_perc] 4050 loss=0.0152 l1=0.0135 perc=0.0870
+[rrdb_perc] 4100 loss=0.0105 l1=0.0095 perc=0.0525
+[rrdb_perc] 4150 loss=0.0127 l1=0.0112 perc=0.0723
+[rrdb_perc] 4200 loss=0.0155 l1=0.0137 perc=0.0859
+[rrdb_perc] 4250 loss=0.0121 l1=0.0106 perc=0.0736
+[rrdb_perc] 4300 loss=0.0131 l1=0.0116 perc=0.0734
+[rrdb_perc] 4350 loss=0.0141 l1=0.0125 perc=0.0792
+[rrdb_perc] 4400 loss=0.0154 l1=0.0138 perc=0.0824
+[rrdb_perc] 4450 loss=0.0143 l1=0.0127 perc=0.0811
+[rrdb_perc] 4500 loss=0.0143 l1=0.0128 perc=0.0734
+[rrdb_perc] step 4500 val psnr=34.528 ssim=0.9733 (1255s)
+[rrdb_perc] 4550 loss=0.0136 l1=0.0123 perc=0.0651
+[rrdb_perc] 4600 loss=0.0131 l1=0.0115 perc=0.0768
+[rrdb_perc] 4650 loss=0.0106 l1=0.0093 perc=0.0662
+[rrdb_perc] 4700 loss=0.0156 l1=0.0140 perc=0.0794
+[rrdb_perc] 4750 loss=0.0130 l1=0.0117 perc=0.0636
+[rrdb_perc] 4800 loss=0.0140 l1=0.0124 perc=0.0766
+[rrdb_perc] 4850 loss=0.0110 l1=0.0097 perc=0.0636
+[rrdb_perc] 4900 loss=0.0108 l1=0.0096 perc=0.0593
+[rrdb_perc] 4950 loss=0.0166 l1=0.0150 perc=0.0790
+done rrdb_perc: val psnr=34.543 ssim=0.9733 best=34.543 time=1369s

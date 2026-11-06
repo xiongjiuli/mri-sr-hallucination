@@ -1,0 +1,16 @@
+[unc rrdb_dsc_mkda] 0 loss=0.4077
+[unc rrdb_dsc_mkda] 100 loss=0.0627
+[unc rrdb_dsc_mkda] 200 loss=0.0649
+[unc rrdb_dsc_mkda] 300 loss=0.0600
+[unc rrdb_dsc_mkda] 400 loss=0.0514
+[unc rrdb_dsc_mkda] 500 loss=0.0485
+[unc rrdb_dsc_mkda] 600 loss=0.0537
+[unc rrdb_dsc_mkda] 700 loss=0.0728
+[unc rrdb_dsc_mkda] 800 loss=0.0453
+[unc rrdb_dsc_mkda] 900 loss=0.0394
+[unc rrdb_dsc_mkda] 1000 loss=0.0610
+[unc rrdb_dsc_mkda] 1100 loss=0.0615
+[unc rrdb_dsc_mkda] 1200 loss=0.0492
+[unc rrdb_dsc_mkda] 1300 loss=0.0452
+[unc rrdb_dsc_mkda] 1400 loss=0.0530
+wrote /Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/checkpoints/rrdb_dsc_mkda_unc.pt

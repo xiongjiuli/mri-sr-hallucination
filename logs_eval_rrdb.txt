@@ -1,0 +1,36 @@
+/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/.pylibs/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/.pylibs/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+rrdb_l1 id done (2446)
+rrdb_l1 blur1.4 done (600)
+rrdb_l1 noise done (600)
+rrdb_l1 bicubic done (600)
+LPIPS(2446) = 0.0571
+{
+ "id": {
+  "psnr": 33.774,
+  "ssim": 0.9708,
+  "hfen": 0.8552,
+  "edge_ssim": 0.9351,
+  "lpips": 0.0571
+ },
+ "blur1.4": {
+  "psnr": 31.5102,
+  "ssim": 0.9574,
+  "hfen": 0.9014,
+  "edge_ssim": 0.9118
+ },
+ "noise": {
+  "psnr": 29.5855,
+  "ssim": 0.6717,
+  "hfen": 0.9559,
+  "edge_ssim": 0.4405
+ },
+ "bicubic": {
+  "psnr": 32.116,
+  "ssim": 0.9664,
+  "hfen": 0.8865,
+  "edge_ssim": 0.9307
+ }
+}

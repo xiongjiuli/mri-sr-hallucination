@@ -1,0 +1,75 @@
+# Resolved configuration of the main experiment (TrustSR).
+# The same values are stored inside every checkpoint under `args`.
+
+data:
+  dataset: IXI-T1w
+  n_subjects: 72
+  split: subject-level, stratified by site
+  split_seed: 2026
+  train_subjects: 43
+  val_subjects: 11
+  test_subjects: 18
+  preprocessing:
+    brain_extraction: deepbet
+    orientation: RAS (nibabel as_closest_canonical)
+    resampling: 1 mm isotropic in-plane
+    slice_size: 256
+    intensity_norm: 1st/99th percentile of brain voxels
+    slice_filter: brain area >= 10% of max
+  degradation:
+    train: Gaussian blur sigma=0.8 + 4x4 average pooling
+    mkda: sigma ~ Uniform{0.5, 0.8, 1.1, 1.4}
+    test_ood: [blur1.4, noise0.02, bicubic]
+
+model:
+  arch: rrdb
+  nf: 64
+  nblocks: 4
+  growth: 32
+  scale: 4
+  params: 3.21M
+  global_residual: bicubic
+  last_layer_init: zero
+
+training:
+  steps: 5000
+  batch_size: 8
+  patch: 192
+  optimizer: Adam
+  lr: 2.0e-4
+  betas: [0.9, 0.99]
+  schedule: cosine to 1e-6 with 200-step warmup
+  grad_clip: 5.0
+  seed: 0
+  val_every: 500
+  val_slices: 24
+  selection: best validation PSNR only
+
+objectives: [l1, l1_perc, l1_mkda, l1_dsc_mkda]
+loss:
+  l1_weight: 1.0
+  dsc_weight: 0.5
+  perceptual_weight: 0.02
+  perceptual_backbone: AlexNet (torchvision, features[:12])
+
+uncertainty:
+  head: 3 conv layers, 48/24/1 channels
+  target: e / (e + 0.02)
+  steps: 1500
+  lr: 1.0e-3
+  batch_size: 8
+  generator: frozen
+
+risk_control:
+  shrinkage: x_alpha = alpha*sr + (1-alpha)*bicubic
+  alpha_grid: [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+  selected_alpha: 0.9
+  gate: w = exp(-beta * u); x = w*sr + (1-w)*bicubic
+  beta_grid: [0, 1, 2, 4, 8, 16, 32]
+  note: used as a negative control; uniform shrinkage dominates at matched HE
+
+evaluation:
+  metrics: [PSNR, SSIM, LPIPS, HFEN, edge-SSIM, GL, COP-HE, COP-VR, COP-MAE]
+  cop: 240 test slices, 4 patches per slice, patch 48, inner 32
+  statistics: paired Wilcoxon across slices
+  hardware: Apple M3 Pro (MPS), PyTorch 2.12

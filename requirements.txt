@@ -1,0 +1,16 @@
+torch==2.12.0
+torchvision==0.27.0
+numpy==1.26.4
+scipy==1.13.1
+scikit-image==0.24.0
+nibabel==5.4.2
+matplotlib==3.9.2
+pandas==2.2.2
+tqdm==4.66.5
+PyYAML==6.0.1
+lpips==0.1.4
+deepbet==1.0.2
+connected-components-3d
+fill_voids
+fastremap
+python-docx==1.2.0

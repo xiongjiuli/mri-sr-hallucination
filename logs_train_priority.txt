@@ -1,0 +1,131 @@
+[rrdb_dsc_mkda] 0 loss=0.0214 l1=0.0181 dsc=0.0065
+[rrdb_dsc_mkda] 50 loss=0.0236 l1=0.0205 dsc=0.0062
+[rrdb_dsc_mkda] 100 loss=0.0212 l1=0.0190 dsc=0.0044
+[rrdb_dsc_mkda] 150 loss=0.0192 l1=0.0181 dsc=0.0023
+[rrdb_dsc_mkda] 200 loss=0.0158 l1=0.0152 dsc=0.0010
+[rrdb_dsc_mkda] 250 loss=0.0165 l1=0.0159 dsc=0.0012
+[rrdb_dsc_mkda] 300 loss=0.0189 l1=0.0183 dsc=0.0011
+[rrdb_dsc_mkda] 350 loss=0.0196 l1=0.0187 dsc=0.0019
+[rrdb_dsc_mkda] 400 loss=0.0134 l1=0.0127 dsc=0.0015
+[rrdb_dsc_mkda] 450 loss=0.0138 l1=0.0134 dsc=0.0008
+[rrdb_dsc_mkda] 500 loss=0.0176 l1=0.0166 dsc=0.0022
+[rrdb_dsc_mkda] step 500 val psnr=33.214 ssim=0.9637 (141s)
+[rrdb_dsc_mkda] 550 loss=0.0194 l1=0.0175 dsc=0.0039
+[rrdb_dsc_mkda] 600 loss=0.0183 l1=0.0171 dsc=0.0024
+[rrdb_dsc_mkda] 650 loss=0.0136 l1=0.0131 dsc=0.0010
+[rrdb_dsc_mkda] 700 loss=0.0160 l1=0.0150 dsc=0.0020
+[rrdb_dsc_mkda] 750 loss=0.0190 l1=0.0181 dsc=0.0017
+[rrdb_dsc_mkda] 800 loss=0.0136 l1=0.0128 dsc=0.0016
+[rrdb_dsc_mkda] 850 loss=0.0138 l1=0.0130 dsc=0.0015
+[rrdb_dsc_mkda] 900 loss=0.0104 l1=0.0096 dsc=0.0016
+[rrdb_dsc_mkda] 950 loss=0.0173 l1=0.0158 dsc=0.0029
+[rrdb_dsc_mkda] 1000 loss=0.0161 l1=0.0155 dsc=0.0011
+[rrdb_dsc_mkda] step 1000 val psnr=33.671 ssim=0.9669 (371s)
+[rrdb_dsc_mkda] 1050 loss=0.0168 l1=0.0154 dsc=0.0027
+[rrdb_dsc_mkda] 1100 loss=0.0123 l1=0.0116 dsc=0.0014
+[rrdb_dsc_mkda] 1150 loss=0.0150 l1=0.0137 dsc=0.0027
+[rrdb_dsc_mkda] 1200 loss=0.0139 l1=0.0131 dsc=0.0017
+[rrdb_dsc_mkda] 1250 loss=0.0124 l1=0.0118 dsc=0.0011
+[rrdb_dsc_mkda] 1300 loss=0.0164 l1=0.0157 dsc=0.0015
+[rrdb_dsc_mkda] 1350 loss=0.0145 l1=0.0132 dsc=0.0026
+[rrdb_dsc_mkda] 1400 loss=0.0146 l1=0.0141 dsc=0.0010
+[rrdb_dsc_mkda] 1450 loss=0.0160 l1=0.0150 dsc=0.0021
+[rrdb_dsc_mkda] 1500 loss=0.0136 l1=0.0129 dsc=0.0015
+[rrdb_dsc_mkda] step 1500 val psnr=33.861 ssim=0.9695 (549s)
+[rrdb_dsc_mkda] 1550 loss=0.0168 l1=0.0152 dsc=0.0031
+[rrdb_dsc_mkda] 1600 loss=0.0159 l1=0.0152 dsc=0.0014
+[rrdb_dsc_mkda] 1650 loss=0.0189 l1=0.0179 dsc=0.0021
+[rrdb_dsc_mkda] 1700 loss=0.0114 l1=0.0107 dsc=0.0016
+[rrdb_dsc_mkda] 1750 loss=0.0169 l1=0.0155 dsc=0.0029
+[rrdb_dsc_mkda] 1800 loss=0.0104 l1=0.0100 dsc=0.0007
+[rrdb_dsc_mkda] 1850 loss=0.0149 l1=0.0142 dsc=0.0014
+[rrdb_dsc_mkda] 1900 loss=0.0149 l1=0.0138 dsc=0.0022
+[rrdb_dsc_mkda] 1950 loss=0.0118 l1=0.0114 dsc=0.0007
+[rrdb_dsc_mkda] 2000 loss=0.0157 l1=0.0146 dsc=0.0023
+[rrdb_dsc_mkda] step 2000 val psnr=33.899 ssim=0.9701 (729s)
+[rrdb_dsc_mkda] 2050 loss=0.0137 l1=0.0129 dsc=0.0016
+[rrdb_dsc_mkda] 2100 loss=0.0162 l1=0.0150 dsc=0.0023
+[rrdb_dsc_mkda] 2150 loss=0.0135 l1=0.0126 dsc=0.0018
+[rrdb_dsc_mkda] 2200 loss=0.0190 l1=0.0173 dsc=0.0032
+[rrdb_dsc_mkda] 2250 loss=0.0148 l1=0.0131 dsc=0.0034
+[rrdb_dsc_mkda] 2300 loss=0.0145 l1=0.0132 dsc=0.0024
+[rrdb_dsc_mkda] 2350 loss=0.0131 l1=0.0126 dsc=0.0009
+[rrdb_dsc_mkda] 2400 loss=0.0138 l1=0.0133 dsc=0.0011
+[rrdb_dsc_mkda] 2450 loss=0.0181 l1=0.0172 dsc=0.0017
+[rrdb_dsc_mkda] 2500 loss=0.0153 l1=0.0140 dsc=0.0027
+[rrdb_dsc_mkda] step 2500 val psnr=34.048 ssim=0.9706 (880s)
+[rrdb_dsc_mkda] 2550 loss=0.0164 l1=0.0154 dsc=0.0021
+[rrdb_dsc_mkda] 2600 loss=0.0159 l1=0.0149 dsc=0.0019
+[rrdb_dsc_mkda] 2650 loss=0.0133 l1=0.0129 dsc=0.0009
+[rrdb_dsc_mkda] 2700 loss=0.0125 l1=0.0118 dsc=0.0013
+[rrdb_dsc_mkda] 2750 loss=0.0148 l1=0.0133 dsc=0.0030
+[rrdb_dsc_mkda] 2800 loss=0.0148 l1=0.0143 dsc=0.0009
+[rrdb_dsc_mkda] 2850 loss=0.0126 l1=0.0120 dsc=0.0012
+[rrdb_dsc_mkda] 2900 loss=0.0146 l1=0.0138 dsc=0.0015
+[rrdb_dsc_mkda] 2950 loss=0.0116 l1=0.0109 dsc=0.0013
+[rrdb_dsc_mkda] 3000 loss=0.0118 l1=0.0109 dsc=0.0018
+[rrdb_dsc_mkda] step 3000 val psnr=34.175 ssim=0.9712 (1017s)
+[rrdb_dsc_mkda] 3050 loss=0.0124 l1=0.0115 dsc=0.0017
+[rrdb_dsc_mkda] 3100 loss=0.0142 l1=0.0135 dsc=0.0014
+[rrdb_dsc_mkda] 3150 loss=0.0139 l1=0.0128 dsc=0.0021
+[rrdb_dsc_mkda] 3200 loss=0.0135 l1=0.0129 dsc=0.0012
+[rrdb_dsc_mkda] 3250 loss=0.0139 l1=0.0133 dsc=0.0012
+[rrdb_dsc_mkda] 3300 loss=0.0145 l1=0.0140 dsc=0.0011
+[rrdb_dsc_mkda] 3350 loss=0.0152 l1=0.0147 dsc=0.0010
+[rrdb_dsc_mkda] 3400 loss=0.0125 l1=0.0116 dsc=0.0019
+[rrdb_dsc_mkda] 3450 loss=0.0112 l1=0.0106 dsc=0.0012
+[rrdb_dsc_mkda] 3500 loss=0.0143 l1=0.0131 dsc=0.0022
+[rrdb_dsc_mkda] step 3500 val psnr=34.228 ssim=0.9715 (1155s)
+[rrdb_dsc_mkda] 3550 loss=0.0120 l1=0.0112 dsc=0.0017
+[rrdb_dsc_mkda] 3600 loss=0.0134 l1=0.0126 dsc=0.0015
+[rrdb_dsc_mkda] 3650 loss=0.0140 l1=0.0135 dsc=0.0012
+[rrdb_dsc_mkda] 3700 loss=0.0152 l1=0.0145 dsc=0.0015
+[rrdb_dsc_mkda] 3750 loss=0.0180 l1=0.0166 dsc=0.0026
+[rrdb_dsc_mkda] 3800 loss=0.0127 l1=0.0117 dsc=0.0020
+[rrdb_dsc_mkda] 3850 loss=0.0141 l1=0.0131 dsc=0.0019
+[rrdb_dsc_mkda] 3900 loss=0.0153 l1=0.0146 dsc=0.0013
+[rrdb_dsc_mkda] 3950 loss=0.0144 l1=0.0139 dsc=0.0011
+[rrdb_dsc_mkda] 4000 loss=0.0122 l1=0.0117 dsc=0.0010
+[rrdb_dsc_mkda] step 4000 val psnr=34.259 ssim=0.9718 (1292s)
+[rrdb_dsc_mkda] 4050 loss=0.0157 l1=0.0145 dsc=0.0024
+[rrdb_dsc_mkda] 4100 loss=0.0127 l1=0.0119 dsc=0.0016
+[rrdb_dsc_mkda] 4150 loss=0.0115 l1=0.0111 dsc=0.0009
+[rrdb_dsc_mkda] 4200 loss=0.0148 l1=0.0142 dsc=0.0011
+[rrdb_dsc_mkda] 4250 loss=0.0122 l1=0.0114 dsc=0.0017
+[rrdb_dsc_mkda] 4300 loss=0.0185 l1=0.0171 dsc=0.0028
+[rrdb_dsc_mkda] 4350 loss=0.0122 l1=0.0114 dsc=0.0017
+[rrdb_dsc_mkda] 4400 loss=0.0124 l1=0.0115 dsc=0.0018
+[rrdb_dsc_mkda] 4450 loss=0.0114 l1=0.0109 dsc=0.0009
+[rrdb_dsc_mkda] 4500 loss=0.0166 l1=0.0158 dsc=0.0016
+[rrdb_dsc_mkda] step 4500 val psnr=34.253 ssim=0.9717 (1425s)
+[rrdb_dsc_mkda] 4550 loss=0.0124 l1=0.0116 dsc=0.0014
+[rrdb_dsc_mkda] 4600 loss=0.0114 l1=0.0109 dsc=0.0010
+[rrdb_dsc_mkda] 4650 loss=0.0119 l1=0.0111 dsc=0.0016
+[rrdb_dsc_mkda] 4700 loss=0.0143 l1=0.0135 dsc=0.0017
+[rrdb_dsc_mkda] 4750 loss=0.0140 l1=0.0133 dsc=0.0013
+[rrdb_dsc_mkda] 4800 loss=0.0118 l1=0.0113 dsc=0.0010
+[rrdb_dsc_mkda] 4850 loss=0.0115 l1=0.0110 dsc=0.0010
+[rrdb_dsc_mkda] 4900 loss=0.0142 l1=0.0137 dsc=0.0012
+[rrdb_dsc_mkda] 4950 loss=0.0080 l1=0.0076 dsc=0.0007
+done rrdb_dsc_mkda: val psnr=34.242 ssim=0.9719 best=34.259 time=1551s
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/src/train.py", line 168, in <module>
+    main()
+  File "/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/src/train.py", line 138, in main
+    loss, parts = loss_fn(sr, hr, lr, sigma)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/src/train.py", line 60, in loss_fn
+    p = perc(sr, hr)
+        ^^^^^^^^^^^^
+  File "/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/.pylibs/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/.pylibs/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/julia/Documents/PhD-26Fall/医学大数据与人工智能/src/train.py", line 45, in forward
+    x = (x - self.mean) / self.std
+         ~~^~~~~~~~~~~
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, mps:0 and cpu!
