@@ -1,5 +1,7 @@
 # Measuring Hallucination in MRI Super-Resolution
 
+**Repository:** <https://github.com/xiongjiuli/mri-sr-hallucination>
+
 Code, data splits and experiment logs for the course project
 *AI-assisted research: a controlled probe for hallucinated structure in MRI
 super-resolution, and an empirical study of fidelity, sharpness and
