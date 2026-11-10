@@ -7,10 +7,27 @@ Code, data splits and experiment logs for the course project
 super-resolution, and an empirical study of fidelity, sharpness and
 fabrication*.
 
-The repository contains everything needed to reproduce the main results:
-subject-level data splits, preprocessing, four trained models, the
-counterfactual occlusion probe (COP), all evaluation scripts and the
-scripts that regenerate every number and figure in the paper.
+The repository contains subject-level data splits, training configurations,
+the counterfactual occlusion probe (COP), evaluation scripts, and archived
+results. The archived analyses run directly from the committed results.
+To rerun model inference, download and preprocess IXI and regenerate the
+checkpoints.
+
+## Manuscript update
+
+The [revised paper](paper/main.pdf) and its [Overleaf source archive](paper/MRI_SR_overleaf.zip)
+include the paired detail recovery error (PDRE), analysis of each RRDB
+training and inference setting, and a protocol for testing paired
+fine-tuning. Compared with the preceding 12-page draft, the completed
+subject-balanced HE reanalysis and controlled PDRE ablation now have a
+repository entry point. Their tables and paired-output figure are built
+from the committed COP records and examples.
+
+The HE reanalysis covers 263 matched patches from 18 test subjects.
+The PDRE ablation uses controlled edits of three archived IXI regions
+to check sensitivity to erased, attenuated, displaced, and false detail.
+Comparisons on new model outputs, paired fine-tuning, and the HAT and
+MambaIRv2 experiments are listed in the paper as planned work.
 
 ---
 
@@ -28,7 +45,8 @@ scripts that regenerate every number and figure in the paper.
 | `src/baselines.py` | bicubic baseline |
 | `src/gate_sweep.py` | validation sweep for the gate strength β |
 | `src/make_numbers.py` | generates `paper/numbers.tex` from the results |
-| `src/figures.py` | generates all paper figures |
+| `src/figures.py` | generates the original RRDB and COP figures |
+| `src/paired_ablation.py` | regenerates the subject-level HE table and controlled PDRE table and figure from committed archives |
 | `scripts/download_ixi.py` | parallel range download of IXI-T1.tar (4.84 GB) |
 | `scripts/train_all.sh` | trains the four models sequentially and the error head |
 | `configs/` | resolved training configurations |
@@ -124,11 +142,25 @@ python3 -m src.baselines --lpips
 python3 -m src.gate_sweep --ckpt checkpoints/rrdb_dsc_mkda_unc.pt
 ```
 
-Then regenerate the paper numbers and figures:
+To rerun the two archived analyses from the repository root, use an
+environment with NumPy and Matplotlib installed:
+
+```bash
+python3 -m src.paired_ablation
+```
+
+This reads the committed COP JSON files and
+`results/cop_examples_rrdb_l1.npz`. It writes
+`paper/paired_ablation.tex` and `paper/figures/fig_paired_controls.pdf`.
+It requires no model checkpoint, GPU, or IXI download. To keep the outputs
+separate from the manuscript tree, pass `--out-dir /path/to/output`.
+
+After model evaluation, regenerate the paper numbers and figures:
 
 ```bash
 python3 -m src.make_numbers
 python3 -m src.figures
+python3 -m src.paired_ablation
 cd paper && pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
@@ -137,15 +169,16 @@ cd paper && pdflatex main && bibtex main && pdflatex main && pdflatex main
 See `results/summary_*.json`, `results/cop_*.json`, `results/figures/` and
 `paper/main.pdf`. The main findings are:
 
-1. pixel-loss SR is conservative: it improves PSNR over bicubic by ~3 dB
-   while raising COP hallucination from 0.002 to 0.022;
+1. pixel-loss SR improves PSNR over bicubic by ~3 dB under the reference
+   degradation. The archived bicubic COP used a different patch list;
 2. perceptual training improves LPIPS but increases COP hallucination by
    about 18%;
-3. multi-kernel degradation training improves out-of-distribution PSNR by
-   ~0.5 dB but also increases hallucination, and adding DSC does not help;
+3. multi-kernel degradation training improves PSNR by ~0.5 dB under the
+   stronger blur included in its training distribution. Its HE is higher
+   than fixed-blur L1, and adding DSC raises HE further;
 4. shrinking the output toward bicubic lowers hallucination by ~10% for a
-   0.03 dB PSNR cost, and a learned error gate is no better than this
-   uniform shrinkage.
+   0.03 dB PSNR cost. On validation, the learned gate gives lower PSNR
+   than a uniform blend with a nearby HE on the same generator.
 
 ## 7. Reproducibility notes
 
@@ -162,7 +195,7 @@ See `results/summary_*.json`, `results/cop_*.json`, `results/figures/` and
 
 This project was developed with an AI coding assistant (DeepSeek Harness).
 The assistant wrote the initial code, ran the experiments and drafted the
-manuscript. All numbers in the paper are generated from the result files by
-`src/make_numbers.py`; the group is responsible for checking the code, the
+manuscript. Codex assisted with the paired evaluation revision and its
+archive analysis. The group is responsible for checking the code, the
 splits, the metrics and the claims. See `docs/AI_USAGE.md` for the detailed
 record.
